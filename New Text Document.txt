@@ -1,0 +1,36 @@
+@echo off
+REM Cierra Google Chrome si está abierto
+taskkill /F /IM chrome.exe
+
+REM Espera un momento para asegurarse de que Chrome se haya cerrado
+timeout /t 5 /nobreak
+
+REM Ruta al directorio del perfil de Google Chrome
+SET "chrome_profile=%LOCALAPPDATA%\Google\Chrome\User Data"
+
+REM Elimina las carpetas de datos de navegación, cookies y accesos a cuentas
+REM Nota: Esto eliminará toda la información de navegación para todos los perfiles
+REM Asegúrate de tener una copia de seguridad si es necesario
+
+REM Eliminar caché
+echo Eliminando caché...
+rd /s /q "%chrome_profile%\Default\Cache"
+
+REM Eliminar cookies
+echo Eliminando cookies...
+del /q "%chrome_profile%\Default\Cookies"
+
+REM Eliminar historial de navegación
+echo Eliminando historial de navegación...
+del /q "%chrome_profile%\Default\History"
+
+REM Eliminar sesión de usuario (accesos a cuentas)
+echo Eliminando sesión de usuario...
+del /q "%chrome_profile%\Default\Login Data"
+del /q "%chrome_profile%\Default\Login Data-journal"
+del /q "%chrome_profile%\Default\Web Data"
+del /q "%chrome_profile%\Default\Web Data-journal"
+
+echo Datos de navegación, cookies y accesos a cuentas de Google Chrome han sido eliminados.
+
+pause
