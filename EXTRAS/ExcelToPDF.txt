@@ -1,0 +1,27 @@
+Sub ConvertToPDF()
+
+    Dim ws As Worksheet
+    Dim outputFile As String
+
+    ' Seleccionar la hoja activa o especificar la hoja deseada
+    Set ws = ThisWorkbook.Sheets(1) ' Cambia el número según la hoja que desees
+
+    ' Definir el archivo de salida
+    outputFile = ThisWorkbook.Path & "\archivo_convertido.pdf" ' Ruta de salida, guardará en la misma carpeta del archivo Excel
+
+    ' Configurar encabezado y pie de página
+    With ws.PageSetup
+        .CenterHeader = "&""Arial,Bold""&14 Encabezado Personalizado"  ' Encabezado centrado
+        .LeftHeader = "&D" ' Fecha en el encabezado izquierdo
+        .RightHeader = "&T" ' Hora en el encabezado derecho
+        .CenterFooter = "&""Arial""&10 Página &P de &N"  ' Pie de página centrado con número de página
+    End With
+
+    ' Exportar a PDF
+    ws.ExportAsFixedFormat Type:=xlTypePDF, Filename:=outputFile, Quality:=xlQualityStandard, _
+        IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
+
+    ' Mensaje para indicar que la conversión ha sido completada
+    MsgBox "El archivo se ha guardado como PDF en: " & outputFile
+
+End Sub
