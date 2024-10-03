@@ -45,3 +45,64 @@ Sub AjustarMargenesImpresion()
     
     MsgBox "Proceso completado"
 End Sub
+
+
+
+
+
+
+
+
+Sub AjustarMargenesImpresion()
+    Dim Carpeta As String
+    Dim Archivo As String
+    Dim Libro As Workbook
+    Dim UltimaFila As Long
+    Dim ws As Worksheet
+    
+    ' Carpeta donde está el archivo Excel con la macro
+    Carpeta = ThisWorkbook.Path & "\"
+    
+    ' Buscar solo archivos .xlsx en la carpeta
+    Archivo = Dir(Carpeta & "*.xlsx")
+    
+    ' Comprobar si se encontró algún archivo
+    If Archivo = "" Then
+        MsgBox "No se encontraron archivos .xlsx en la carpeta."
+        Exit Sub
+    End If
+    
+    ' Recorrer cada archivo Excel
+    Do While Archivo <> ""
+        ' Abrir archivo
+        Set Libro = Workbooks.Open(Carpeta & Archivo)
+        
+        ' Recorrer cada hoja de cada archivo
+        For Each ws In Libro.Worksheets
+            With ws
+                ' Encontrar la última fila con datos
+                UltimaFila = .Cells(.Rows.Count, "A").End(xlUp).Row
+                
+                ' Ajustar configuración de página
+                With .PageSetup
+                    ' Ajustar área de impresión hasta la columna F
+                    .PrintArea = "A1:F" & UltimaFila
+                    
+                    ' Ajustar márgenes
+                    .TopMargin = Application.InchesToPoints(0.5) ' Puedes ajustar según prefieras
+                    .BottomMargin = Application.InchesToPoints(0.5) ' Margen inferior ajustado
+                    .LeftMargin = Application.InchesToPoints(0.5) ' Margen izquierdo
+                    .RightMargin = Application.InchesToPoints(0.5) ' Margen derecho
+                End With
+            End With
+        Next ws
+        
+        ' Guardar y cerrar archivo
+        Libro.Close SaveChanges:=True
+        
+        ' Buscar el siguiente archivo
+        Archivo = Dir
+    Loop
+    
+    MsgBox "Proceso completado"
+End Sub
