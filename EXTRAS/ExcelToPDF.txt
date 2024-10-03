@@ -1,27 +1,47 @@
-Sub ConvertToPDF()
-
+Sub AjustarMargenesImpresion()
+    Dim Carpeta As String
+    Dim Archivo As String
+    Dim Libro As Workbook
+    Dim UltimaFila As Long
     Dim ws As Worksheet
-    Dim outputFile As String
-
-    ' Seleccionar la hoja activa o especificar la hoja deseada
-    Set ws = ThisWorkbook.Sheets(1) ' Cambia el número según la hoja que desees
-
-    ' Definir el archivo de salida
-    outputFile = ThisWorkbook.Path & "\archivo_convertido.pdf" ' Ruta de salida, guardará en la misma carpeta del archivo Excel
-
-    ' Configurar encabezado y pie de página
-    With ws.PageSetup
-        .CenterHeader = "&""Arial,Bold""&14 Encabezado Personalizado"  ' Encabezado centrado
-        .LeftHeader = "&D" ' Fecha en el encabezado izquierdo
-        .RightHeader = "&T" ' Hora en el encabezado derecho
-        .CenterFooter = "&""Arial""&10 Página &P de &N"  ' Pie de página centrado con número de página
-    End With
-
-    ' Exportar a PDF
-    ws.ExportAsFixedFormat Type:=xlTypePDF, Filename:=outputFile, Quality:=xlQualityStandard, _
-        IncludeDocProperties:=True, IgnorePrintAreas:=False, OpenAfterPublish:=False
-
-    ' Mensaje para indicar que la conversión ha sido completada
-    MsgBox "El archivo se ha guardado como PDF en: " & outputFile
-
+    
+    ' Carpeta donde está el archivo Excel con la macro
+    Carpeta = ThisWorkbook.Path & "\"
+    
+    ' Buscar archivos Excel en la carpeta
+    Archivo = Dir(Carpeta & "*.xls*")
+    
+    ' Recorrer cada archivo Excel
+    Do While Archivo <> ""
+        ' Abrir archivo
+        Set Libro = Workbooks.Open(Carpeta & Archivo)
+        
+        ' Recorrer cada hoja de cada archivo
+        For Each ws In Libro.Worksheets
+            With ws
+                ' Encontrar la última fila con datos
+                UltimaFila = .Cells(.Rows.Count, "A").End(xlUp).Row
+                
+                ' Ajustar configuración de página
+                With .PageSetup
+                    ' Ajustar área de impresión hasta la columna F
+                    .PrintArea = "A1:F" & UltimaFila
+                    
+                    ' Ajustar márgenes
+                    .TopMargin = Application.InchesToPoints(0.5) ' Puedes ajustar según prefieras
+                    .BottomMargin = Application.InchesToPoints(0.5) ' Margen inferior ajustado
+                    .LeftMargin = Application.InchesToPoints(0.5) ' Margen izquierdo
+                    .RightMargin = Application.InchesToPoints(0.5) ' Margen derecho
+                End With
+            End With
+        Next ws
+        
+        ' Guardar y cerrar archivo
+        Libro.Close SaveChanges:=True
+        
+        ' Buscar el siguiente archivo
+        Archivo = Dir
+    Loop
+    
+    MsgBox "Proceso completado"
 End Sub
