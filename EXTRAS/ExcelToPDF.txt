@@ -106,3 +106,26 @@ Sub AjustarMargenesImpresion()
     
     MsgBox "Proceso completado"
 End Sub
+
+
+
+
+Sub CambiarFormatoTexto()
+    Dim celda As Range
+    On Error GoTo ManejarError ' Manejo de errores
+    
+    ' Recorrer cada celda en la hoja activa
+    For Each celda In ActiveSheet.UsedRange
+        ' Verificar si la celda contiene texto
+        If VarType(celda.Value) = vbString Then
+            ' Cambiar tamaño de la letra y poner en negrita
+            celda.Font.Size = 14
+            celda.Font.Bold = True
+        End If
+    Next celda
+
+    Exit Sub ' Salir para evitar ejecutar el manejo de errores si todo va bien
+
+ManejarError:
+    MsgBox "Ocurrió un error: " & Err.Description
+End Sub
