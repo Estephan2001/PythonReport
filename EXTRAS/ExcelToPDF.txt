@@ -49,3 +49,29 @@
 
 </body>
 </html>
+
+
+
+
+<style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            white-space: nowrap;
+        }
+        th {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+            text-align: left; /* Alinear encabezado a la izquierda */
+        }
+        td {
+            background-color: white;
+            color: black;
+        }
+    </style>
